@@ -117,5 +117,113 @@ uint256 favoriteNumber;  // The variable is declared but not initialized
 - `bytes`: Empty array
 - `bytes32`: `0x0000000000000000000000000000000000000000000000000000000000000000`
 
+### Functions in Solidity
 
+Functions in Solidity are blocks of code designed to perform specific tasks, such as storing or retrieving data. Here's a breakdown of key concepts related to functions in Solidity.
 
+### Function Definition
+
+A function in Solidity is defined using the `function` keyword, followed by the function name, parameters (optional), and the function body enclosed in curly braces.
+
+- **Basic Function Structure**:
+  ```solidity
+  function functionName() public {
+      // Function logic goes here
+  }
+  ```
+
+### Function Visibility
+
+Functions in Solidity can have one of the following visibility specifiers:
+
+- **`public`**: The function can be called both internally (within the contract) and externally (by other contracts or transactions). If a function is marked `public`, it is accessible from both inside the contract and from other contracts or accounts.
+  
+- **`internal`**: The function can only be accessed within the current contract or contracts that inherit from it. It is not visible to external actors.
+  
+- **`external`**: The function is only accessible externally and cannot be called from within the contract. It is designed for interactions with other contracts or users.
+
+- **`private`**: The function can only be accessed within the current contract. It is completely hidden from external calls, even by derived contracts.
+
+By default, if no visibility specifier is provided, functions are considered `internal`.
+
+### Function Types
+
+Solidity functions can be categorized based on their side effects:
+
+- **`view` functions**: These functions can read state variables but cannot modify them. They do not alter the blockchain state and therefore do not consume gas when called externally.
+
+  - Example of a `view` function:
+    ```solidity
+    function retrieve() public view returns(uint256) {
+        return favoriteNumber;
+    }
+    ```
+  
+- **`pure` functions**: These functions cannot read or modify state variables. They only rely on the input parameters and do not interact with the blockchain state. These functions are free of gas costs when called externally.
+  
+  - Example of a `pure` function:
+    ```solidity
+    function multiply(uint256 x, uint256 y) public pure returns(uint256) {
+        return x * y;
+    }
+    ```
+
+### Function Parameters and Return Values
+
+Functions can accept **parameters** (input values) and return **values**. The parameters are defined inside the parentheses `()` after the function name, and the return type is defined using the `returns` keyword.
+
+- Example with parameters and a return value:
+  ```solidity
+  function add(uint256 a, uint256 b) public pure returns(uint256) {
+      return a + b;
+  }
+  ```
+
+### Function Modifiers
+
+Modifiers are special functions that can be used to change the behavior of other functions. They allow you to add pre-conditions or restrictions before or after the execution of a function.
+
+- Example of a simple modifier:
+  ```solidity
+  modifier onlyOwner() {
+      require(msg.sender == owner, "Not the contract owner");
+      _;
+  }
+
+  function setFavoriteNumber(uint256 _favoriteNumber) public onlyOwner {
+      favoriteNumber = _favoriteNumber;
+  }
+  ```
+
+### Example: Full Contract with Functions
+
+Here’s an example that demonstrates a contract with different functions (including `view` and `pure`):
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.19;
+
+contract SimpleStorage {
+    uint256 public favoriteNumber;  // State variable
+
+    // Store function: Stores a number in the contract
+    function store(uint256 _favoriteNumber) public {
+        favoriteNumber = _favoriteNumber;
+    }
+
+    // View function: Returns the stored favorite number
+    function retrieve() public view returns(uint256) {
+        return favoriteNumber;
+    }
+
+    // Pure function: Returns a constant value
+    function add(uint256 a, uint256 b) public pure returns(uint256) {
+        return a + b;
+    }
+}
+```
+
+- Functions in Solidity are defined with the `function` keyword, and their visibility can be `public`, `internal`, `external`, or `private`.
+- Functions can be `view` (read from state) or `pure` (do not interact with state).
+- Functions can take parameters and return values.
+- **Modifiers** allow you to restrict or modify the behavior of functions.
